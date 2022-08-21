@@ -6,27 +6,26 @@ alpha 3.0.0
 
 ## Last Update
 
-2022-08-18
+2022-08-20
 
 ## Table
 
-| Platform_code | Platform_name        | Progress      | Upd |
-| ------------- | -------------------- | ------------- | --- |
-| scratch       | Scratch              | ✅Fully       |     |
-| ccw           | 共创世界             | ⏲️to-do       |     |
-| a             | 阿儿法营（稽木世界） | ⏲️to-do       |     |
-| cn            | Scratch 中社         | ⏲️to-do       |     |
-| xmw           | 小码王               | ⏲️to-do       |     |
-| kid           | 编程少年             | ⏲️to-do       |     |
-| 40            | 40code               | ⏲️to-do       |     |
-| tl            | 有道小图灵           | ⏲️to-do       |     |
-| xes           | 学而思编程           | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-|               |                      | ⏲️to-do       |     |
-| kada          | 有道卡搭             | ❌Unsupported |     |
-| mao           | 编程猫               | ❌Unsupported |     |
+*如有未纳入本表的编程社区，请提交issue.
+
+| Platform_code | Platform_name | Progress     | Upd |
+| ------------- | ------------- | ------------ | --- |
+| scratch       | Scratch       | ✅Fully       |     |
+| ccw           | 共创世界          | ⏲️to-do      |     |
+| a             | 阿儿法营（稽木世界）    | ⏲️to-do      |     |
+| cn            | Scratch 中社    | ⏲️to-do      |     |
+| xmw           | 小码王           | ⏲️to-do      |     |
+| sn            | 编程少年          | ⏲️to-do      |     |
+| 40            | 40code        | ⏲️to-do      |     |
+| xtl           | 有道小图灵         | ⏲️to-do      |     |
+| xes           | 学而思编程         | ⏲️to-do      |     |
+| bcd           | 编程豆           | ⏲️to-do      |     |
+| lab           | Codelab       | ⏲️to-do      |     |
+| mind          | mind+         | ⏲️to-do      |     |
+| cxm           | 程小盟           | ⏲️to-do      |     |
+| kada          | 有道卡搭          | ❌Unsupported |     |
+| bcm           | 编程猫           | ❌Unsupported |     |
