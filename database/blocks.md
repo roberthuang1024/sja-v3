@@ -349,3 +349,8 @@
 | kinect       | getSensorOfPlayer           | a        | num          | 2          |                                                                                 |     |
 | kinect       | menu_SENSOR                 | a        | menu         | 1field     |                                                                                 |     |
 | kinect       | menu_PLAYER                 | a        | menu         | 1field     |                                                                                 |     |
+| data         | loadvariable                | a        | sentence     | 2field     |                                                                                 |     |
+| data         | savevariable                | a        | sentence     | 2field     |                                                                                 |     |
+| data         | loadlist                    | a        | sentence     | 2field     |                                                                                 |     |
+| data         | savelist                    | a        | sentence     | 2field     |                                                                                 |     |
+| sensing      | userid                      | xmw      | num          | 0          |                                                                                 |     |

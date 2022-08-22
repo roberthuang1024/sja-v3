@@ -6,7 +6,7 @@ alpha 3.0.0
 
 ## Last Update
 
-2022-08-20
+2022-08-22
 
 ## Table
 
@@ -15,8 +15,8 @@ alpha 3.0.0
 | Platform_code | Platform_name | Progress     | Upd |
 | ------------- | ------------- | ------------ | --- |
 | scratch       | Scratch       | ✅Fully       |     |
+| a             | 阿儿法营（稽木世界）    | ✅Fully       |     |
 | ccw           | 共创世界          | ⏲️to-do      |     |
-| a             | 阿儿法营（稽木世界）    | ⏲️to-do      |     |
 | cn            | Scratch 中社    | ⏲️to-do      |     |
 | xmw           | 小码王           | ⏲️to-do      |     |
 | sn            | 编程少年          | ⏲️to-do      |     |
