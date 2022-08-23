@@ -354,3 +354,13 @@
 | data         | loadlist                    | a        | sentence     | 2field     |                                                                                 |     |
 | data         | savelist                    | a        | sentence     | 2field     |                                                                                 |     |
 | sensing      | userid                      | xmw      | num          | 0          |                                                                                 |     |
+| xiaoma       | getXiaomaUserInfo           | xmw      | num          | 1field     |                                                                                 |     |
+| xiaoma       | xiaomaPurchase              | xmw      | sentence     | 2          |                                                                                 |     |
+| sccn         | jituiTotal                  | cn       | bool         | 1          | bool 型积木，但没有 is 前缀                                                     |     |
+| sccn         | jituiTotalGT                | cn       | bool         | 1          | 同上                                                                            |     |
+| sccnvip      | getPlayerNickname           | cn       | num          | 0          |                                                                                 |     |
+| sccnvip      | saveUserInfo                | cn       | sentence     | 2          |                                                                                 |     |
+| sccnvip      | getUserList                 | cn       | sentence     | 2          |                                                                                 |     |
+| sccnvip      | menu_DRUM                   | cn       | menu         | 1field     |                                                                                 |     |
+| sccnvip      | menu_PER                    | cn       | menu         | 1field     |                                                                                 |     |
+| sccnvip      | jsonChange                  | cn       | num          | 2          |                                                                                 |     |
