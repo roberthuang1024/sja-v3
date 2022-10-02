@@ -1,0 +1,77 @@
+// Author: Robert Huang(孤言)
+// License: GNU GENERAL PUBLIC LICENSE v3
+// Version: beta global.0.0.0
+
+// 空报告列表
+let result = { count_costume: 0, res_costume: 0, count_sound: 0, res_sound: 0 };
+
+// 空id表
+let ids = { costumes: [], sounds: [] };
+
+function analyse(json_str) {
+  try {
+    var project = JSON.parse(json_str); // 将字符串转换为json对象
+  } catch {
+    return "Invalid Json"; //输入字符串不是json文件
+  }
+
+  try {
+    let targets = project["targets"]; //获取targets
+  } catch {
+    return "Invalid Scratch"; //不是Scratch文件
+  }
+
+  // 报告：角色数（除去舞台）
+  // to-do: CCW中有特殊角色
+  result["count_sprite"] = targets.length - 1;
+
+  // 遍历每一个角色
+  for (let i = 0; i < targets.length; i++) {
+    //基础计数操作
+    let sprite = targets[i];
+
+    // 对舞台作特殊计数
+    if (sprite["isStage"]) {
+      let variables = sprite["variables"]; //获取公有变量
+      // 报告：公有变量数
+      result["count_publicVar"] = variables.length;
+
+      let lists = sprite["lists"]; //获取公有列表
+      // 报告：公有列表数
+      result["count_publicList"] = lists.length;
+
+      let broadcasts = sprite["broadcasts"]; //获取广播
+      // 报告：广播数
+      result["count_broadcast"] = broadcasts.length;
+    }
+
+    // 普通计数项
+    countRes("constumes", sprite["costumes"]);
+    countRes("sounds", sprite["sounds"]);
+
+    // 报告：资源数
+    result["res_costume"] = ids["costumes"].length;
+    result["res_sound"] = ids["sounds"].length;
+
+    countBlock(sprite["blocks"]);
+  }
+}
+
+// 资源计数
+function countRes(type, list) {
+  // 报告：角色/声音数增加
+  result["count_" + type] += list.length;
+
+  // 报告：资源大小增加
+  for (let i = 0; i < list.length; i++) {
+    assetId = list[i]["assetId"];
+    if (ids[type].indexOf(assetId) == -1) {
+      id[type].push(assetId);
+    }
+  }
+}
+
+// 积木计数
+function countBlock() {
+  
+}
