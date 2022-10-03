@@ -3,11 +3,23 @@
 // Version: beta global.0.0.0
 
 // dynamic data(debug only, 改写时删除)
-data = {"topLevelBlocks":[]};
-
+data = { topLevelBlocks: [] };
 
 // 空报告列表
-let result = { count_costume: 0, res_costume: 0, count_sound: 0, res_sound: 0 };
+let result = {
+  count_costume: 0,
+  res_costume: 0,
+  count_sound: 0,
+  res_sound: 0,
+  count_para: 0,
+  count_validPara: 0,
+  count_sprite: 0,
+  count_publicVar: 0,
+  count_publicList: 0,
+  count_broadcast: 0,
+  count_privateVar: 0,
+  count_privateList: 0,
+};
 
 // 空id表
 let ids = { costumes: [], sounds: [], broadcasts: [] };
@@ -56,6 +68,14 @@ function analyse(json_str, data) {
     countRes("constumes", sprite["costumes"]);
     countRes("sounds", sprite["sounds"]);
 
+    let variables = sprite["variables"]; //获取私有变量
+    // 报告：私有变量数
+    result["count_privateVar"] = variables.length;
+
+    let lists = sprite["lists"]; //获取私有列表
+    // 报告：私有列表数
+    result["count_privateList"] = lists.length;
+
     // 报告：资源数
     result["res_costume"] = ids["costumes"].length;
     result["res_sound"] = ids["sounds"].length;
@@ -84,11 +104,31 @@ function countBlock(blocks) {
   for (let i = 0; i < blocks.length; i++) {
     let block = blocks[i];
     if (block["topLevel"]) {
-      //判断是否为有效顶层 
-      if()
+      let isTopValid;
+
+      //判断是否为有效顶层
+      if (constData["topLevelBlocks"].includes(block["opcode"])) {
+        isTopValid = true;
+      } else {
+        isTopValid = false;
+      }
+
+      // 报告：代码段数增加
+      result["count_para"] += 1;
+      if (isTopValid) {
+        result["count_validPara"] += 1;
+      }
+
+      // 递归遍历该段积木
+      searchBlockPara(blocks.keys()[i], isTopValid);
+
       // // 读取opcode，并拆分
       // let blockType = block["opcode"].split("_")[0];
       // let blockName = block["opcode"].split("_")[1];
     }
   }
+}
+
+function searchBlockPara(blockId, isTopValid) {
+  // 对parent进行统计
 }
