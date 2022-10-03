@@ -2,13 +2,19 @@
 // License: GNU GENERAL PUBLIC LICENSE v3
 // Version: beta global.0.0.0
 
+// dynamic data(debug only, 改写时删除)
+data = {"topLevelBlocks":[]};
+
+
 // 空报告列表
 let result = { count_costume: 0, res_costume: 0, count_sound: 0, res_sound: 0 };
 
 // 空id表
-let ids = { costumes: [], sounds: [] };
+let ids = { costumes: [], sounds: [], broadcasts: [] };
 
-function analyse(json_str) {
+// 分析主函数，json_str为json字符串，constData为配置数据
+function analyse(json_str, data) {
+  let constData = data;
   try {
     var project = JSON.parse(json_str); // 将字符串转换为json对象
   } catch {
@@ -41,6 +47,7 @@ function analyse(json_str) {
       result["count_publicList"] = lists.length;
 
       let broadcasts = sprite["broadcasts"]; //获取广播
+      countRes("broadcasts", broadcasts);
       // 报告：广播数
       result["count_broadcast"] = broadcasts.length;
     }
@@ -72,6 +79,16 @@ function countRes(type, list) {
 }
 
 // 积木计数
-function countBlock() {
-  
+function countBlock(blocks) {
+  // 遍历每一个积木，仅对topLevel积木计数
+  for (let i = 0; i < blocks.length; i++) {
+    let block = blocks[i];
+    if (block["topLevel"]) {
+      //判断是否为有效顶层 
+      if()
+      // // 读取opcode，并拆分
+      // let blockType = block["opcode"].split("_")[0];
+      // let blockName = block["opcode"].split("_")[1];
+    }
+  }
 }
