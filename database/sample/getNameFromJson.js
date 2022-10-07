@@ -1,3 +1,4 @@
+// 从sample中的json文件中提取blocks
 function getNameFromJson(json) {
   document.write("<ul>")
   var project = JSON.parse(json);

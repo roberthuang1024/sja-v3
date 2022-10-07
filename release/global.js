@@ -7,6 +7,7 @@ data = { topLevelBlocks: [] };
 
 // 空报告列表
 let result = {
+  unknown: [],
   count_costume: 0,
   res_costume: 0,
   count_sound: 0,
@@ -130,5 +131,18 @@ function countBlock(blocks) {
 }
 
 function searchBlockPara(blockId, isTopValid) {
+  for(key in blocks)
+  {
+    // 找到parent是上一个结点(blockId)的积木
+    if(blocks[key]["parent"]==blockId)
+    {
+      
+    }
+  }
   // 对parent进行统计
+}
+
+function blockNotFound(blockName) {
+  result["unknown"].push(blockName); //将未知积木加入报告的unknown列表
+
 }
