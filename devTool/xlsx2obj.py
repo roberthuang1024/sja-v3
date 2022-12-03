@@ -1,4 +1,4 @@
-from pyperclip import copy
+# from pyperclip import copy
 obj = {}
 while True:
     ipt = input()
@@ -21,4 +21,4 @@ while True:
     else:
         obj[name] = dict((("pf", [row[2]]), ("struc", row[3])))  # 创建新积木
 
-copy(str(obj).replace("'",'"'))  # 输出对象
+print(str(obj).replace("'",'"'))  # 输出对象

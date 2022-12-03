@@ -1,13 +1,14 @@
-// Author: Robert Huang(孤言)
-// License: GNU GENERAL PUBLIC LICENSE v3
-// Version: beta global 0.0.0
+/*
+ * @Author: Robert Huang (孤言)
+ * @Date: 2022-12-03
+ */
 
 //  (debug only, 改写时删除)
 DEBUG_data = {
   motion_movesteps: { pf: ["sc"], struc: "sentence" },
   motion_turnright: { pf: ["sc"], struc: "sentence" },
   motion_turnleft: { pf: ["sc"], struc: "sentence" },
-  motion_goto: { pf: ["sc"], struc: "sentence" }
+  motion_goto: { pf: ["sc"], struc: "sentence" },
 };
 
 // 空报告列表
@@ -26,7 +27,8 @@ let result = {
   count_privateVar: 0,
   count_privateList: 0,
   count_totalBlock: 0,
-  count_validBlock: 0
+  count_validBlock: 0,
+  category_stat: {},
 };
 
 // 空id表
@@ -39,8 +41,17 @@ let blocks = {};
 let info = {};
 
 let validTopStrucs = ["top-input", "top-def", "top-arg", "top"];
-let realEntityStrucs = ["top-input", "top-def", "top-arg", "top",
-  "sentence", "num", "cmouth", "bool"];
+let realEntityStrucs = [
+  "top-input",
+  "top-def",
+  "top-arg",
+  "top",
+  "sentence",
+  "num",
+  "cmouth",
+  "bool",
+];
+let categoryConvert = {};
 // 分析主函数，json_str为json字符串，Info为配置数据
 function analyse(json_str, data) {
   info = data;
@@ -107,7 +118,7 @@ function countRes(type, list) {
   // 报告：资源大小增加
   for (let i = 0; i < list.length; i++) {
     assetId = list[i]["assetId"];
-    if (!(ids[type].includes(assetId))) {
+    if (!ids[type].includes(assetId)) {
       id[type].push(assetId);
       result["res_" + type]++;
     }
@@ -121,9 +132,12 @@ function countBlock() {
     let crrBlock = blocks[key];
     if (crrBlock["topLevel"]) {
       let isTopValid;
-      if (validTopStrucs.includes(crrBlock["opcode"]))//Valid top
-      { isTopValid = true; }
-      else { isTopValid = false; }
+      if (validTopStrucs.includes(crrBlock["opcode"])) {
+        //Valid top
+        isTopValid = true;
+      } else {
+        isTopValid = false;
+      }
 
       //报告：代码段计数
       result["count_para"] += 1;
@@ -140,42 +154,83 @@ function countBlock() {
 }
 
 function searchBlockPara(blockId, isTopValid, parentStruc) {
-  //对当前积木块进行统计
+  //统计当前积木块
+
+  //当前积木struc
   let crrBlock = blocks[blockId];
-  let struc = lookUpInfo(crrBlock["opcode"]);
+  let crrOpcode = crrBlock["opcode"];
+  let crrNext = crrBlock["next"]
+  let struc = lookUpInfo(crrOpcode);
+
+  // 判断是否为entity并统计
   let isEntity = false;
   if (realEntityStrucs.includes(struc)) {
     isEntity = true;
   }
-  if ((struc == "special-num" || struc == "special-bool") &&
-    (parentStruc != "prototype" && parentStruc != "top-arg")) {
+  if (
+    (struc == "special-num" || struc == "special-bool") &&
+    parentStruc != "prototype" &&
+    parentStruc != "top-arg"
+  ) {
     isEntity = true;
   }
   if (isEntity) {
     //报告：积木数增加
-    result
+    result["count_totalBlock"]++;
+    if (isTopValid) {
+      result["count_validBlock"]++;
+    }
+
+    // 按类型统计当前积木块
+    let category = crrOpcode.split("_")[0];
+    if (category == "ccw") {
+      category = parentStruc;
+    } else if (category == "argument") {
+      category = "procedures";
+    }
+    result["category_stat"][category]++;
+
+    //统计inputs和fields中的参数积木
+    let crrInputs = crrBlock["inputs"];
+    if (crrBlock.hasOwnProperty("inputs")) {
+      for (key in crrInputs) {
+        let inputArgType;
+        try {
+          inputArgType = crrInputs[keys][1][0];
+        }
+        catch {
+          inputArgType = 0;
+        }
+        if (inputArgType == 12 || inputArgType == 13) {
+          //报告：积木数增加
+          result["count_totalBlock"]++;
+          if (isTopValid) {
+            result["count_validBlock"]++;
+          }
+          result["category_stat"]["data"]++;
+        }
+      }
+    }
   }
 
+  //安排下一步递归
   switch (struc) {
-    case "unknown": break;
+    case "unknown":
+      break;
     case "top-input":
   }
 
-
-  for (key in blocks) {
-    // 找到parent是上一个结点(blockId)的积木
-    if (blocks[key]["parent"] == blockId) {
-      // 对parent进行统计
-    }
+  if (crrNext != null) {
+    searchBlockPara(crrNext, isTopValid, struc);
   }
+
   return;
 }
 
 function lookUpInfo(opcode, type = "struc") {
   if (info.hasOwnProperty(opcode)) {
     return info[opcode][type];
-  }
-  else {
+  } else {
     result["unknown"].push(blockName); //将未知积木加入报告的unknown列表
     return "unknown";
   }
