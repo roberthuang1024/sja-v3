@@ -1,17 +1,18 @@
 /*
  * @Author: Robert Huang (孤言)
- * @Date: 2022-12-03
+ * @Date: 2022-12-30
  */
 
-//  (debug only, 改写时删除)
-DEBUG_data = {
-  motion_movesteps: { pf: ["sc"], struc: "sentence" },
-  motion_turnright: { pf: ["sc"], struc: "sentence" },
-  motion_turnleft: { pf: ["sc"], struc: "sentence" },
-  motion_goto: { pf: ["sc"], struc: "sentence" },
-};
+// for debug.html
+document.getElementById("submit").onclick = function () {
+  let json_str = document.getElementById("json_str").value.replace(/[\r\n]/g, "");
+  let inf = document.getElementById("inf").value.replace(/[\r\n]/g, "");
+  document.write("Analyzing...<br>");
+  document.write(JSON.stringify(analyse(json_str, inf),null,4)+"<br>");
+  document.write("Done<br>");
+}
 
-// 空报告列表
+// 报告列表
 let result = {
   unknown: [],
   count_costume: 0,
@@ -52,20 +53,20 @@ let realEntityStrucs = [
   "bool",
 ];
 let categoryConvert = {};
+
 // 分析主函数，json_str为json字符串，Info为配置数据
-function analyse(json_str, data) {
-  info = data;
+function analyse(json_str, inf) {
+  info = inf;
   try {
     var project = JSON.parse(json_str); // 将字符串转换为json对象
   } catch {
-    return "Invalid Json"; //输入字符串不是json文件
+    return {"err":"Invalid Json"}; //输入字符串不是json文件
   }
 
-  try {
-    targets = project["targets"]; //获取targets
-  } catch {
-    return "Invalid Scratch"; //不是Scratch文件
-  }
+  if (project.hasOwnProperty("targets"))
+    targets = project["targets"];//获取targets
+  else
+    return {"err":"Invalid Scratch"}; //不是Scratch文件
 
   // 报告：角色数（除去舞台）
   // to-do: CCW中有特殊角色
@@ -105,7 +106,7 @@ function analyse(json_str, data) {
     result["res_sound"] = ids["sounds"].length;
 
     blocks = sprite["blocks"];
-    countBlock();
+    findParaInBlocks();
   }
   return result;
 }
@@ -126,7 +127,7 @@ function countRes(type, list) {
 }
 
 // 积木计数
-function countBlock() {
+function findParaInBlocks() {
   // 遍历每一个积木，找到topLevel块以后递归搜索
   for (let key in blocks) {
     let crrBlock = blocks[key];
@@ -153,13 +154,43 @@ function countBlock() {
   }
 }
 
+function cntArgsInInputs(crrInputs) {
+  for (key in crrInputs) {
+    let inputArgType;
+    try {
+      inputArgType = crrInputs[keys][1][0];
+    } catch {
+      inputArgType = 0;
+    }
+    if (inputArgType == 12 || inputArgType == 13) {
+      //报告：积木数增加
+      result["count_totalBlock"]++;
+      if (isTopValid) {
+        result["count_validBlock"]++;
+      }
+      result["category_stat"]["data"]++;
+    }
+  }
+}
+
+function searchBlocksInInputs(crrInputs, isTopValid, struc) {
+  for (key in crrInputs) {
+    let inputArgType;
+    inputArgType = crrInputs[keys][0];
+
+    if (inputArgType == 2) {
+      searchBlockPara(crrInputs[keys][1], isTopValid, struc);
+    }
+  }
+}
+
 function searchBlockPara(blockId, isTopValid, parentStruc) {
   //统计当前积木块
 
   //当前积木struc
   let crrBlock = blocks[blockId];
   let crrOpcode = crrBlock["opcode"];
-  let crrNext = crrBlock["next"]
+  let crrNext = crrBlock["next"];
   let struc = lookUpInfo(crrOpcode);
 
   // 判断是否为entity并统计
@@ -191,41 +222,30 @@ function searchBlockPara(blockId, isTopValid, parentStruc) {
     result["category_stat"][category]++;
 
     //统计inputs和fields中的参数积木
-    let crrInputs = crrBlock["inputs"];
-    if (crrBlock.hasOwnProperty("inputs")) {
-      for (key in crrInputs) {
-        let inputArgType;
-        try {
-          inputArgType = crrInputs[keys][1][0];
-        }
-        catch {
-          inputArgType = 0;
-        }
-        if (inputArgType == 12 || inputArgType == 13) {
-          //报告：积木数增加
-          result["count_totalBlock"]++;
-          if (isTopValid) {
-            result["count_validBlock"]++;
-          }
-          result["category_stat"]["data"]++;
-        }
-      }
+    cntArgsInInputs(crrBlock["inputs"]);
+    cntArgsInInputs(crrBlock["fields"]);
+
+    //安排下一步递归
+
+    //内含积木无效 (暂时无需操作)
+    t = ["unknown", "top-def", "top-arg", "top"];
+    if (t.includes(struc)) { }
+
+    //内含积木有效, 递归内含积木
+    t = ["top-input", "sentence", "control", "num", "bool", "menu", "cmouth"];
+    if (t.includes(struc)) {
+      searchBlocksInInputs(crrBlock["inputs"], isTopValid, struc);
     }
   }
 
-  //安排下一步递归
-  switch (struc) {
-    case "unknown":
-      break;
-    case "top-input":
-  }
-
+  //连接到下一个积木的递归（to-do: 可能出现重复的next?）
   if (crrNext != null) {
     searchBlockPara(crrNext, isTopValid, struc);
   }
 
   return;
 }
+
 
 function lookUpInfo(opcode, type = "struc") {
   if (info.hasOwnProperty(opcode)) {

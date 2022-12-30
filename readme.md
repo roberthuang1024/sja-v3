@@ -57,6 +57,7 @@ SJA 原版采用 Scratch 实现，旧版 SJA 网站采用 Python 后端实现。
   - special-var 变量或列表参数
   - special-num 形参/实参
   - special-bool 形参/实参
+  - special-menu 作为积木的列表
   - sentence 语句
   - prototype 内含形参
   - num 参数
@@ -64,6 +65,8 @@ SJA 原版采用 Scratch 实现，旧版 SJA 网站采用 Python 后端实现。
   - cmouth 控制语句，携带列表 cmouth，内容为 input 属性
   - bool 布尔值
 - Entity：true if a block is counted as a visible block unit in Scratch editor
+- Para: 一个代码段
+- Category: 人为区分的积木类型（与前缀不一定相同）
 
 ### project.json
 
